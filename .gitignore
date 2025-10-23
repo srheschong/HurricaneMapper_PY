@@ -1,0 +1,9 @@
+# Ignore the uncompressed outputs of the IBTrACS_NA.zip file
+data/raw/IBTrACS_NA_README.txt
+data/raw/IBTrACS_NA.dbf
+data/raw/IBTrACS_NA.prj
+data/raw/IBTrACS_NA.shp
+data/raw/IBTrACS_NA.shx
+
+# Ignore outputs
+data/processed/*
