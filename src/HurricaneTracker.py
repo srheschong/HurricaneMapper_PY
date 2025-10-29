@@ -19,11 +19,6 @@ arcpy.env.workspace = str(raw_folder_path)
 arcpy.env.overwriteOutput = True
 
 # %%
-#Set storm variable
-storm_season = 2024
-storm_name = "HELENE"
-affected_counties = processed_folder_path / 'affected_counties.shp'
-
 #Set model layers
 ibtracs_NA_points = str(raw_folder_path /'IBTrACS_NA.shp')
 usa_counties = 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Counties_Generalized_Boundaries/FeatureServer/0'
@@ -31,25 +26,33 @@ storm_track_points =  "memory\\track_points"
 storm_track_line = "memory\\Tracklines"
 
 #%%
-#Create a list to hold storm names for the season
-storm_names = []
+#Create dictionary of storm names for each season
+storm_dict = {}
 
-#Create a list of storm names for a given year
-cursor = arcpy.da.SearchCursor(
-    in_table=ibtracs_NA_points,
-    where_clause=f'SEASON = {storm_season}',
-    field_names=['NAME']
-)
+#Loop through each season
+for storm_season in range(2000,2004):
 
-#Iterate through rows in cursor
-for row in cursor:
-    #Get the storm name
-    storm_name = row[0]
-    if not storm_name in storm_names and storm_name != 'UNAMED':
-        storm_names.append(storm_name)
+    #Create a list to hold storm names for the season
+    storm_names = []
+
+    #Create a list of storm names for a given year
+    cursor = arcpy.da.SearchCursor(
+        in_table=ibtracs_NA_points,
+        where_clause=f'SEASON = {storm_season}',
+        field_names=['NAME']
+    )
+
+    #Iterate through rows in cursor
+    for row in cursor:
+        #Get the storm name
+        storm_name = row[0]
+        if not storm_name in storm_names and storm_name != 'UNAMED':
+            storm_names.append(storm_name)
 
 
-del(cursor)
+    del(cursor)
+    
+    storm_dict[storm_season] = storm_names
 
 # %% [markdown]
 # #### Select point features corresponding to a specific storm (season & name)
